@@ -1,0 +1,39 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+}
+
+main {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+article {
+    flex-grow: 1;
+    background: #f0f3f6;
+}
+
+.header {
+    background: #d7dde4;
+    height: 70px;
+}
+
+.header .header-block-nav {
+    margin-left: auto;
+    white-space: nowrap;
+    padding-right: 15px;
+    width: min-content;
+}
+
+.main-content {
+    padding: 40px 50px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0 0 0 5px;
+}

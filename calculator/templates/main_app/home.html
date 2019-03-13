@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Calculation
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
+            async></script>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static "main_app/" %}css/home.css"/>
+</head>
+<body>
+<main>
+    <article>
+        <div class="row main-content">
+            <div class="col-2 answer_links">
+                {% include 'main_app/include/answer_links.html' %}
+            </div>
+            <div class="col-8 calc-content">
+                <form method="post" action="{% url 'download' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-7">
+                            <h4>Исходные данные</h4>
+
+                            <div class="row" style="max-width: 380px;">
+                                <div class="col-6">
+                                    Ставка дисконтирования
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="percent"
+                                               aria-describedby="basic-addon1" name="percent"
+                                               value="0">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    Срок
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <select class="custom-select" id="year" onchange="onYearChange()" name="year">
+                                            {% for i in i|rjust:10 %}
+                                                <option value="{{ forloop.counter }}" {% if forloop.counter == 10 %}
+                                                        selected {% endif %}>{{ forloop.counter }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="input-group-append">
+                                            <label class="input-group-text" for="year">год(а)/лет</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <h4>Результат</h4>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    Чистый дисконтированный доход (ЧДД/NPV)
+                                </div>
+                                <div class="col-4" id="totalDiscounted">0</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    Индекс прибыльности (англ. Profitability Index)
+                                </div>
+                                <div class="col-4" id="profIndex">∞</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="table" class="table-editable">
+                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                            <tr>
+                                <th class="text-center">Год</th>
+                                <th class="text-center">Доходы проекта</th>
+                                <th class="text-center">Первоначальные инвестиции/Расходы проекта</th>
+                                <th class="text-center">Чистый поток платежей</th>
+                                <th class="text-center">Коэффициент дисконтирования</th>
+                                <th class="text-center">Дисконтированные платежи</th>
+                            </tr>
+                            {% for i in i|rjust:10 %}
+                                <tr id="row_{{ forloop.counter }}">
+                                    <td class="pt-3-half">{{ forloop.counter|add:"-1" }}</td>
+                                    <td class="pt-3-half">
+                                        {% if forloop.counter != 1 %}
+                                            <input id="col_1_{{ forloop.counter }}" type="number" name="income_{{ forloop.counter }}" value="0"/>
+                                        {% else %}0{% endif %}
+                                    </td>
+                                    <td class="pt-3-half">
+                                        <input id="col_2_{{ forloop.counter }}" type="number" name="outgo_{{ forloop.counter }}" value="0"/>
+                                    </td>
+                                    <td class="pt-3-half" id="col_3_{{ forloop.counter }}">0.00</td>
+                                    <td class="pt-3-half" id="col_4_{{ forloop.counter }}">1.00</td>
+                                    <td class="pt-3-half" id="col_5_{{ forloop.counter }}">0.00</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="pt-3-half">Итого</td>
+                                <td class="pt-3-half" id="totalIncome">0</td>
+                                <td class="pt-3-half" id="totalOutgo">0</td>
+                                <td class="pt-3-half" id="totalRes">0</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="float-right">
+                        <button class="btn btn-info" type="submit">Загрузить</button>
+                        <button class="btn btn-danger" type="button" onclick="clean()">Очистить</button>
+                    </div>
+                    <br/><br/>
+
+                    <div class="card">
+                        <div class="card-body">
+                            $$NPV = -C_0 + \sum_{i=1}^t {C_i \over (1 + r)^i}$$
+                            $$PI = {\sum_{i=1}^t {C_i \over (1 + r)^i} \over C_0}$$
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </article>
+</main>
+
+<script>
+    function onYearChange() {
+        var year = parseInt($('#year').val());
+        for (var i = 1; i <= year; ++i) {
+            $('#row_' + i).show();
+        }
+        for (var i = year + 1; i < 11; ++i) {
+            $('#row_' + i).hide();
+        }
+        recalc();
+    }
+
+    function recalc() {
+        var year = parseInt($('#year').val());
+        var percent = parseInt($('#percent').val());
+        var totalOutgo = 0;
+        var totalIncome = 0;
+        var totalRes = 0;
+        var totalDiscounted = 0;
+        var c0 = 0;
+        for (var i = 1; i <= year; ++i) {
+            var income = i > 1 ? parseInt($('#col_1_' + i).val()) : 0;
+            var outgo = parseInt($('#col_2_' + i).val());
+            var res = income - outgo;
+            $('#col_3_' + i).html(res);
+
+            var coef = 1 / Math.pow(1 + percent / 100, i - 1);
+            $('#col_4_' + i).html(coef.toFixed(2));
+
+            var discounted = res * coef;
+            $('#col_5_' + i).html(discounted.toFixed(2));
+
+            totalIncome += income;
+            totalOutgo += outgo;
+            totalRes += res;
+
+            if (i === 1) {
+                c0 = outgo;
+            } else {
+                totalDiscounted += discounted;
+            }
+        }
+        $('#totalIncome').html(totalIncome);
+        $('#totalOutgo').html(totalOutgo);
+        $('#totalRes').html(totalRes);
+        $('#totalDiscounted').html((totalDiscounted - c0).toFixed(2));
+        if (c0 !== 0) {
+            $('#profIndex').html((totalDiscounted / c0).toFixed(2));
+        } else {
+            $('#profIndex').html('∞');
+        }
+    }
+
+    document.getElementById('percent').addEventListener('input', function () {
+        recalc();
+    });
+
+    for (var i = 2; i < 11; ++i) {
+        document.getElementById('col_1_' + i).addEventListener('input', function () {
+            recalc();
+        });
+    }
+
+    for (i = 1; i < 11; ++i) {
+        document.getElementById('col_2_' + i).addEventListener('input', function () {
+            recalc();
+        });
+    }
+
+    function clean() {
+        for (var i = 1; i < 11; ++i) {
+            $('#col_1_' + i).val(0);
+            $('#col_2_' + i).val(0);
+        }
+        recalc();
+    }
+
+</script>
+
+</body>
+</html>

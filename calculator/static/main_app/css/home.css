@@ -1,0 +1,70 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+}
+
+main {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+article {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.05);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.answer_links {
+    background: #343131 !important;
+    padding: 20px 20px 20px 30px;
+}
+
+p.caption {
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 80%;
+    white-space: nowrap;
+    color: #9b9b9b;
+}
+
+a.links {
+    color: #d9d9d9;
+    font-size: 14px;
+}
+
+ul.answers {
+    list-style-type: none;
+    padding: 0 0 0 5px;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.calc-content {
+    padding: 40px 50px;
+}
+
+td {
+    background: #e5e7e9
+}
+
+td.editable_col {
+    background: #f2f3f4;
+}
+
+td > input {
+    padding: 1px 5px;
+    width: 150px;
+    text-align: center;
+}

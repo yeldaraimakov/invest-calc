@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Downloaded Files
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static "admin/" %}css/files_list.css"/>
+</head>
+<body>
+<main>
+    <header class="header">
+        <div class="header-block header-block-nav">
+            <ul class="nav-profile">
+                <li class="profile dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user icon"></i>
+                        <span class="name"> {{ user.username }} </span>
+                    </a>
+                    <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fa fa-power-off icon"></i> Logout </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <article>
+        <div class="row main-content">
+            <div class="col-2"></div>
+            <div class="col-8 calc-content">
+                <div class="accordion" id="fileAccordion">
+                    {% for file in files %}
+                        {% with incomes=file.data.incomes outgos=file.data.outgos coefs=file.data.coefs discounteds=file.data.discounteds %}
+
+                            <div class="card">
+                                <div class="card-header" id="heading_{{ forloop.counter0 }}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                data-target="#collapse_{{ forloop.counter0 }}" aria-expanded="true"
+                                                aria-controls="collapse_{{ forloop.counter0 }}">
+                                            {{ file.created_date }}
+                                        </button>
+                                    </h2>
+                                </div>
+
+                                <div id="collapse_{{ forloop.counter0 }}"
+                                     class="collapse {% if forloop.counter0 == 0 %} show {% endif %}"
+                                     aria-labelledby="heading_{{ forloop.counter0 }}"
+                                     data-parent="#fileAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h4>Исходные данные</h4>
+
+                                                <div class="row" style="max-width: 380px;">
+                                                    <div class="col-6">
+                                                        Ставка дисконтирования
+                                                    </div>
+                                                    <div class="col-6">
+                                                        {{ file.percent }} %
+                                                    </div>
+                                                    <div class="col-6">
+                                                        Срок
+                                                    </div>
+                                                    <div class="col-6">
+                                                        {{ file.year }} год(а)/лет
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-5">
+                                                <h4>Результат</h4>
+
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        ЧДД/NPV
+                                                    </div>
+                                                    <div class="col-4"
+                                                         id="totalDiscounted">{{ file.data.totalDiscounted|floatformat:2 }}</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        Индекс прибыльности
+                                                    </div>
+                                                    <div class="col-4">{{ file.data.profIndex|floatformat:2 }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                                            <tr>
+                                                <th class="text-center">Год</th>
+                                                <th class="text-center">Доходы</th>
+                                                <th class="text-center">Расходы</th>
+                                                <th class="text-center">Чистый поток платежей</th>
+                                                <th class="text-center">Коэф.дисконт.</th>
+                                                <th class="text-center">Дисконт. платежи</th>
+                                            </tr>
+                                            {% load template_filters %}
+                                            {% for income in incomes %}
+                                                {% with forloop.counter0 as i %}
+                                                    <tr>
+                                                        {% with outgo=outgos|index:i coef=coefs|index:i discounted=discounteds|index:i %}
+                                                            <td class="pt-3-half">{{ i }}</td>
+                                                            <td class="pt-3-half">{{ income }}</td>
+                                                            <td class="pt-3-half">{{ outgo }}</td>
+                                                            <td class="pt-3-half">{% subtract income outgo %}</td>
+                                                            <td class="pt-3-half">{{ coef|floatformat:2 }}</td>
+                                                            <td class="pt-3-half">{{ discounted|floatformat:2 }}</td>
+                                                        {% endwith %}
+                                                    </tr>
+                                                {% endwith %}
+                                            {% endfor %}
+                                            <tr>
+                                                <td class="pt-3-half">Итого</td>
+                                                <td class="pt-3-half">{{ file.data.totalIncome }}</td>
+                                                <td class="pt-3-half">{{ file.data.totalOutgo }}</td>
+                                                <td class="pt-3-half">{{ file.data.totalRes }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+
+
+</body>
+</html>

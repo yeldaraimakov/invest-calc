@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        {% block title %}
+            Calculator
+        {% endblock %}
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"/>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static "main_app/" %}css/normalize.css"/>
+    <link rel="stylesheet" href="{% static "main_app/" %}css/jquery.sidr.light.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "main_app/" %}css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static "main_app/" %}css/responsive.css"/>
+    <link rel="stylesheet" href="{% static "main_app/" %}css/style.css"/>
+    {% block resources %}
+
+    {% endblock %}
+</head>
+
+<div id="container1">
+    <div id="content1">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static "main_app/" %}js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="{% static "main_app/" %}js/popper.min.js"></script>
+<script type="text/javascript" src="{% static "main_app/" %}js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="{% static "main_app/" %}js/raphael-min.js"></script>
+<script type="text/javascript" src="{% static "main_app/" %}js/jquery.sidr.min.js"></script>
+
+{% block scripts %}
+
+{% endblock %}
+
+</body>
+</html>
