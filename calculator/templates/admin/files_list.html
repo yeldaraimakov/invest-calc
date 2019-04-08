@@ -39,6 +39,7 @@
         <div class="row main-content">
             <div class="col-2"></div>
             <div class="col-8 calc-content">
+                <h4>Список загруженных данных</h4>
                 <div class="accordion" id="fileAccordion">
                     {% for file in files %}
                         {% with incomes=file.data.incomes outgos=file.data.outgos coefs=file.data.coefs discounteds=file.data.discounteds %}
