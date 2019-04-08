@@ -1,7 +1,29 @@
 <p class="caption">Вопросы - Ответы</p>
-<ul class="answers">
-    <li><a class="links" href="{% url 'faq' %}#question1" target="_blank">NPV: что это такое и как рассчитать</a></li>
-    <li><a class="links" href="{% url 'faq' %}#question2" target="_blank">Приведенная стоимость: понятие и метод расчета</a></li>
-    <li><a class="links" href="{% url 'faq' %}#question3" target="_blank">Как принимать обоснованные инвестиционные решения</a></li>
-    <li><a class="links" href="{% url 'faq' %}#question4" target="_blank">Приведенная стоимость сложных процентов</a></li>
+<ul class="nav nav-stacked answers" id="accordion1">
+    <li class="panel">
+        <a class="links" data-toggle="collapse" data-parent="#accordion1" href="#firstLink">Динамические способы оценки эффективности инвестиционных проектов</a>
+        <ul class="collapse" id="firstLink">
+            <li><a class="links" href="{% url 'faq' %}#answer1" target="_blank">NPV</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer2" target="_blank">Формула чистого дисконтированного дохода</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer3" target="_blank">Оценка проекта на основе критерия NPV</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer4" target="_blank">IRR Внутренняя норма прибыли</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer5" target="_blank">Формула расчета внутренней нормы прибыли инвестиционного проекта</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer6" target="_blank">Достоинства и недостатки внутренней нормы доходности IRR</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer7" target="_blank">Индекс прибыльность инвестиций</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer8" target="_blank">Формула расчета индекса прибыльности инвестиций</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer9" target="_blank">Оценка проекта на основе критерия PI</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer10" target="_blank">Дисконтированный срок окупаемости</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer11" target="_blank">Формула расчета дисконтированного срока окупаемости инвестиций</a></li>
+        </ul>
+    </li>
+
+    <li class="panel">
+        <a class="links" data-toggle="collapse" data-parent="#accordion1" href="#secondLink">Статистические методы оценки инвестиционных проектов</a>
+        <ul class="collapse" id="secondLink">
+            <li><a class="links" href="{% url 'faq' %}#answer12" target="_blank">Срок окупаемости инвестиций или инвестиционного проекта</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer13" target="_blank">Формула расчета срока окупаемости инвестиций (инвестиционного проекта)</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer14" target="_blank">Коэффициент рентабельности инвестиций или инвестиционного проекта</a></li>
+            <li><a class="links" href="{% url 'faq' %}#answer15" target="_blank">Формула расчета коэффициента рентабельности инвестиций</a></li>
+        </ul>
+    </li>
 </ul>

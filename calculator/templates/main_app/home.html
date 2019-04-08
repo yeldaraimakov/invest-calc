@@ -63,27 +63,66 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-5">
-                            <h4>Результат</h4>
-
+                    <h4>Результаты</h4>
+                    <div class="card">
+                        <div class="card-body">
                             <div class="row">
-                                <div class="col-8">
-                                    Чистый дисконтированный доход (ЧДД/NPV)
-                                </div>
-                                <div class="col-4" id="totalDiscounted">0</div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-8">
-                                    Индекс прибыльности (англ. Profitability Index)
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            Чистый дисконтированный доход (ЧДД/NPV)
+                                        </div>
+                                        <div class="col-4" id="totalDiscounted">0</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-8">
+                                            Индекс прибыльности (англ. Profitability Index)
+                                        </div>
+                                        <div class="col-4" id="profIndex">∞</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-8">
+                                            IRR (внутренняя ставка доходности)
+                                        </div>
+                                        <div class="col-4" id="irr">0</div>
+                                    </div>
                                 </div>
-                                <div class="col-4" id="profIndex">∞</div>
+
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            ARR (рентабельность инвестиционного проекта)
+                                        </div>
+                                        <div class="col-4" id="arr">0</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-8">
+                                            PP (срок окупаемости проекта)
+                                        </div>
+                                        <div class="col-4" id="pp">0</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-8">
+                                            DPP(дисконтированный срок окупаемости)
+                                        </div>
+                                        <div class="col-4" id="dpp">0</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <br><br>
 
-                    <div id="table" class="table-editable">
+                    <h4>NPV (чистая приведенная стоимость)</h4>
+
+                    <div id="table-npv" class="table-editable">
                         <table class="table table-bordered table-responsive-md table-striped text-center">
                             <tr>
                                 <th class="text-center">Год</th>
@@ -98,11 +137,13 @@
                                     <td class="pt-3-half">{{ forloop.counter|add:"-1" }}</td>
                                     <td class="pt-3-half">
                                         {% if forloop.counter != 1 %}
-                                            <input id="col_1_{{ forloop.counter }}" type="number" name="income_{{ forloop.counter }}" value="0"/>
+                                            <input id="col_1_{{ forloop.counter }}" type="number"
+                                                   name="income_{{ forloop.counter }}" value="0"/>
                                         {% else %}0{% endif %}
                                     </td>
                                     <td class="pt-3-half">
-                                        <input id="col_2_{{ forloop.counter }}" type="number" name="outgo_{{ forloop.counter }}" value="0"/>
+                                        <input id="col_2_{{ forloop.counter }}" type="number"
+                                               name="outgo_{{ forloop.counter }}" value="0"/>
                                     </td>
                                     <td class="pt-3-half" id="col_3_{{ forloop.counter }}">0.00</td>
                                     <td class="pt-3-half" id="col_4_{{ forloop.counter }}">1.00</td>
@@ -128,6 +169,59 @@
                         <div class="card-body">
                             $$NPV = -C_0 + \sum_{i=1}^t {C_i \over (1 + r)^i}$$
                             $$PI = {\sum_{i=1}^t {C_i \over (1 + r)^i} \over C_0}$$
+                            $$0 = \sum_{t=1}^n {CF_t \over (1 + IRR)^t} - CF_0$$
+                            $$ARR = {CF_{cp} \over { {1 \over 2} * (IC_0 + IC_1)}} $$
+                        </div>
+                    </div>
+                    <br/><br/>
+
+                    <h4>PP (срок окупаемости проекта)</h4>
+
+                    <div id="table-pp">
+                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                            <tr>
+                                <th class="text-center">Год</th>
+                                <th class="text-center">Первоначальные затраты</th>
+                                <th class="text-center">Денежный поток нарастающим итогом</th>
+                            </tr>
+                            {% for i in i|rjust:10 %}
+                                <tr id="row_pp_{{ forloop.counter }}">
+                                    <td class="pt-3-half">{{ forloop.counter|add:"-1" }}</td>
+                                    <td class="pt-3-half" id="pp_col_1_{{ forloop.counter }}">0</td>
+                                    <td class="pt-3-half" id="pp_col_2_{{ forloop.counter }}">0</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            $$PP = min\ m, при\ котором \sum_{i=1}^n CF_i > IC$$
+                        </div>
+                    </div>
+                    <br/><br/>
+
+                    <h4>DPP (дисконтированный срок окупаемости)</h4>
+
+                    <div id="table-dpp">
+                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                            <tr>
+                                <th class="text-center">Год</th>
+                                <th class="text-center">Первоначальные затраты</th>
+                                <th class="text-center">Дисконтированный поток нарастающим потоком
+                                </th>
+                            </tr>
+                            {% for i in i|rjust:10 %}
+                                <tr id="row_dpp_{{ forloop.counter }}">
+                                    <td class="pt-3-half">{{ forloop.counter|add:"-1" }}</td>
+                                    <td class="pt-3-half" id="dpp_col_1_{{ forloop.counter }}">0</td>
+                                    <td class="pt-3-half" id="dpp_col_2_{{ forloop.counter }}">0</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            $$DPP = min\ m, при\ котором \sum_{t=1}^n {CF_t \over (1 + r)^t} > IC$$
                         </div>
                     </div>
                 </form>
@@ -141,16 +235,27 @@
         var year = parseInt($('#year').val());
         for (var i = 1; i <= year; ++i) {
             $('#row_' + i).show();
+            $('#row_pp_' + i).show();
+            $('#row_dpp_' + i).show();
         }
-        for (var i = year + 1; i < 11; ++i) {
+        for (i = year + 1; i < 11; ++i) {
             $('#row_' + i).hide();
+            $('#row_pp_' + i).hide();
+            $('#row_dpp_' + i).hide();
         }
         recalc();
     }
 
     function recalc() {
+        recalcNPV();
+        recalcPP();
+        recalcDPP();
+        recalcIRR();
+    }
+
+    function recalcNPV() {
         var year = parseInt($('#year').val());
-        var percent = parseInt($('#percent').val());
+        var percent = parseFloat($('#percent').val());
         var totalOutgo = 0;
         var totalIncome = 0;
         var totalRes = 0;
@@ -186,6 +291,104 @@
             $('#profIndex').html((totalDiscounted / c0).toFixed(2));
         } else {
             $('#profIndex').html('∞');
+        }
+
+        // recalc ARR
+        var incomeCP = totalIncome / (year - 1);
+        var arr = incomeCP * 100 / totalOutgo;
+        $('#arr').html(arr.toFixed(2));
+    }
+
+    function recalcIRR() {
+        var l = 0, r = 100;
+        var eps = 0.001;
+        var ans = -1;
+        while (Math.abs(r - l) > eps) {
+            var percent = (l + r)/2;
+            var year = parseInt($('#year').val());
+            var totalDiscounted = 0;
+            var c0 = 0;
+            for (var i = 1; i <= year; ++i) {
+                var income = i > 1 ? parseInt($('#col_1_' + i).val()) : 0;
+                var outgo = parseInt($('#col_2_' + i).val());
+                var res = income - outgo;
+                var coef = 1 / Math.pow(1 + percent / 100, i - 1);
+                var discounted = res * coef;
+
+                if (i === 1) {
+                    c0 = outgo;
+                } else {
+                    totalDiscounted += discounted;
+                }
+            }
+            if (totalDiscounted - c0 > 0) {
+                l = percent;
+            } else {
+                r = percent;
+            }
+            ans = totalDiscounted - c0;
+        }
+        if (ans < eps) {
+            $('#irr').html(l.toFixed(2));
+        } else {
+            $('#irr').html('not found (between 0 and 100)');
+        }
+    }
+
+    function recalcPP() {
+        var year = parseInt($('#year').val());
+        var totalRes = 0;
+        var totalOutgo = 0;
+        var ppNotFound = true;
+        var pp = -1;
+        for (var i = 1; i <= year; ++i) {
+            var income = i > 1 ? parseInt($('#col_1_' + i).val()) : 0;
+            var outgo = parseInt($('#col_2_' + i).val());
+            var res = income - outgo;
+
+            totalOutgo += outgo;
+            totalRes += res;
+
+            if (totalRes >= 0 && ppNotFound) {
+                ppNotFound = false;
+                pp = i;
+            }
+
+            $('#pp_col_1_' + i).html(totalOutgo);
+            $('#pp_col_2_' + i).html(totalRes);
+        }
+        if (pp === -1) {
+            $('#pp').html(' > ' + year);
+        } else {
+            $('#pp').html(pp);
+        }
+    }
+
+    function recalcDPP() {
+        var year = parseInt($('#year').val());
+        var totalDiscounted = 0;
+        var totalOutgo = 0;
+        var dppNotFound = true;
+        var dpp = -1;
+        for (var i = 1; i <= year; ++i) {
+            var outgo = parseInt($('#col_2_' + i).val());
+            var discounted = parseFloat($('#col_5_' + i).html());
+
+            totalOutgo += outgo;
+            totalDiscounted += discounted;
+
+            if (totalDiscounted >= 0 && dppNotFound) {
+                dppNotFound = false;
+                dpp = i;
+            }
+
+            $('#dpp_col_1_' + i).html(totalOutgo);
+            $('#dpp_col_2_' + i).html(totalDiscounted.toFixed(2));
+        }
+        if (dpp === -1) {
+            $('#dpp').html(' > ' + year);
+        } else {
+            $('#dpp').html(dpp);
         }
     }
 

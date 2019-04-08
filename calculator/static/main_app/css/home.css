@@ -42,9 +42,9 @@ a.links {
     font-size: 14px;
 }
 
-ul.answers {
-    list-style-type: none;
-    padding: 0 0 0 5px;
+ul, ol {
+    list-style: none;
+    padding: 0 0 0 15px;
 }
 
 .main-content {
@@ -67,4 +67,8 @@ td > input {
     padding: 1px 5px;
     width: 150px;
     text-align: center;
+}
+
+tr.pp {
+    background: #1c7430;
 }
