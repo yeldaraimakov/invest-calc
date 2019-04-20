@@ -1,3 +1,5 @@
+import json
+
 from django import template
 
 register = template.Library()
@@ -10,4 +12,9 @@ def index(List, i):
 
 @register.simple_tag
 def subtract(a, b):
-    return a-b
+    return a - b
+
+
+@register.filter
+def loadjson(data):
+    return json.loads(data)

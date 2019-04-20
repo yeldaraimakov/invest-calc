@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+
     'calculator.main_app',
 ]
 
@@ -91,6 +93,8 @@ DATABASES = {
     }
 }
 
+# Custom user app defaults
+AUTH_USER_MODEL = 'main_app.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -120,7 +124,7 @@ TIME_ZONE = 'Asia/Almaty'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -137,4 +141,4 @@ STATICFILES_DIRS = [
 ]
 
 # Login URL
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/login/'

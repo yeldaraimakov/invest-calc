@@ -72,3 +72,58 @@ td > input {
 tr.pp {
     background: #1c7430;
 }
+
+.login {
+    font-weight: 600;
+    font-size: 14px;
+    color: #02E3A9;
+    text-transform: uppercase;
+    margin-left: -15px;
+}
+
+.login:hover {
+    color: #02E3A9;
+}
+
+.project-name {
+    width: unset !important;
+    display: unset !important;
+}
+
+.dropdown-menu {
+	border: 0;
+	width: 188px;
+	background: #02E3A9;
+	box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.08);
+	padding-top: 40px;
+	padding-bottom: 0;
+	top: 7px !important;
+}
+
+.dropdown-menu:after {
+	content: '';
+	background: url("../images/dropdown-top-icon.png") no-repeat center;
+	width: 16px;
+	top: -7px;
+	display: block;
+	height: 16px;
+	right: 11px;
+	position: absolute;
+}
+
+.dropdown-menu a {
+	text-align: right;
+	width: 100%;
+	display: block;
+	color: #FFF;
+	padding: 5px 18px;
+	font-size: 14px;
+	font-weight: 600;
+	text-transform: uppercase;
+	transition: .2s ease all;
+}
+
+.dropdown-menu a:hover {
+	background-color: #fff;
+	color: #02E3A9;
+}
