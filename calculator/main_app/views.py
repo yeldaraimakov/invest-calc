@@ -99,7 +99,9 @@ def user_login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
+        print(email, password)
         user = authenticate(request, email=email, password=password)
+        print(user)
         if user is not None:
             login(request, user)
             if user.role == User.ADMIN:
@@ -149,7 +151,8 @@ def charts(request):
 
     percents = [percent for percent in range(0, 100, 5)]
 
-    return render(request, 'main_app/charts.html', context={'datas': json.dumps(json_list), 'percents': json.dumps(percents)})
+    return render(request, 'main_app/charts.html', context={'datas': json.dumps(json_list),
+                                                            'percents': json.dumps(percents), 'is_empty': not files})
 
 
 class RegistrationFormView(FormView):

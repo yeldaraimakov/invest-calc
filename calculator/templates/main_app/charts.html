@@ -55,7 +55,11 @@
 </head>
 <body>
 
-<div id="curve_chart" style="width: 2000px; height: 1000px">У вас нет сохраненных проектов</div>
+{% if is_empty %}
+    <h4 style="text-align: center; margin-top: 100px">You have no projects saved</h4>
+{% endif %}
+
+<div id="curve_chart" style="width: 2000px; height: 1000px"></div>
 
 <div id="table-npv-irr" style="width: 800px; margin-left: 300px; margin-bottom: 100px;">
 
