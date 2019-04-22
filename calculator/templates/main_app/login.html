@@ -24,7 +24,8 @@
                 <div class="card-header">Войти</div>
                 <div class="card-body">
                     {% for message in messages %}
-                        <div class="alert alert-danger col-md-6 offset-md-4">
+                        <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                            {% else %} alert-danger {% endif %} col-md-6 offset-md-4">
                             {{ message }}
                         </div>
                     {% endfor %}
