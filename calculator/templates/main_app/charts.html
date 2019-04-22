@@ -14,8 +14,10 @@
 
         console.log(datas);
 
-        google.charts.load('current', {'packages': ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        if (datas.length > 0) {
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+        }
 
         function drawChart() {
 
@@ -53,7 +55,7 @@
 </head>
 <body>
 
-<div id="curve_chart" style="width: 2000px; height: 1000px"></div>
+<div id="curve_chart" style="width: 2000px; height: 1000px">У вас нет сохраненных проектов</div>
 
 <div id="table-npv-irr" style="width: 800px; margin-left: 300px; margin-bottom: 100px;">
 
