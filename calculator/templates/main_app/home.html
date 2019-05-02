@@ -29,6 +29,9 @@
                 <form method="post" action="{% url 'download_excel' %}">
                     {% csrf_token %}
                     <input hidden type="text" name="irr" id="irr-input"/>
+                    <input hidden type="text" name="pp" id="pp-input"/>
+                    <input hidden type="text" name="dpp" id="dpp-input"/>
+                    <input hidden type="text" name="arr" id="arr-input"/>
                     <div class="row">
                         <div class="col-7">
                             <h4>Исходные данные</h4>

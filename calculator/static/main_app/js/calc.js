@@ -65,6 +65,7 @@ $(document).ready(function() {
         var incomeCP = totalIncome / (year - 1);
         var arr = incomeCP * 100 / totalOutgo;
         $('#arr').html(arr.toFixed(2));
+        $('#arr-input').val(arr.toFixed(2));
     }
 
     function recalcIRR() {
@@ -129,8 +130,10 @@ $(document).ready(function() {
         }
         if (pp === -1) {
             $('#pp').html(' > ' + year);
+            $('#pp-input').val(' > ' + year);
         } else {
             $('#pp').html(pp);
+            $('#pp-input').val(pp);
         }
     }
 
@@ -157,8 +160,10 @@ $(document).ready(function() {
         }
         if (dpp === -1) {
             $('#dpp').html(' > ' + year);
+            $('#dpp-input').val(' > ' + year);
         } else {
             $('#dpp').html(dpp);
+            $('#dpp-input').val(dpp);
         }
     }
 

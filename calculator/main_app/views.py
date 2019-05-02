@@ -19,6 +19,9 @@ def download_excel(request):
     year = int(request.POST.get('year', 1))
     project_name = request.POST.get('project_name', '')
     irr = request.POST.get('irr', 0)
+    arr = request.POST.get('arr', 0)
+    pp = request.POST.get('pp', 0)
+    dpp = request.POST.get('dpp', 0)
 
     if not project_name:
         project_name = 'New Project ' + str(random.randint(1, 1000))
@@ -44,41 +47,84 @@ def download_excel(request):
     ws = wb.add_sheet('Users')
 
     # Sheet header, first row
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    header_font = xlwt.XFStyle()
+    header_font.font.bold = True
 
-    ws.write(0, 0, 'Ставка дисконтирования', font_style)
-    ws.write(0, 1, percent, font_style)
-    ws.write(0, 3, 'Срок', font_style)
-    ws.write(0, 4, year, font_style)
+    # Sheet body, remaining rows
+    body_font = xlwt.XFStyle()
 
-    ws.write(2, 0, 'ЧДД/NPV', font_style)
-    ws.write(2, 1, float(ctx.get('totalDiscounted')), font_style)
-    ws.write(2, 3, 'Индекс прибыльности', font_style)
-    ws.write(2, 4, ctx.get('profIndex'), font_style)
+    ws.write(0, 0, 'Ставка дисконтирования', header_font)
+    ws.write(0, 1, percent, header_font)
+    ws.write(0, 3, 'Срок', header_font)
+    ws.write(0, 4, year, header_font)
 
+    ws.write(2, 0, 'ЧДД/NPV', header_font)
+    ws.write(2, 1, float(ctx.get('totalDiscounted')), header_font)
+    ws.write(3, 0, 'Индекс прибыльности', header_font)
+    ws.write(3, 1, ctx.get('profIndex'), header_font)
+    ws.write(4, 0, 'IRR (внутренняя ставка доходности)', header_font)
+    ws.write(4, 1, irr, header_font)
+    ws.write(2, 3, 'ARR (рентабельность инвестиционного проекта)', header_font)
+    ws.write(2, 4, arr, header_font)
+    ws.write(3, 3, 'PP (срок окупаемости проекта)', header_font)
+    ws.write(3, 4, pp, header_font)
+    ws.write(4, 3, 'DPP(дисконтированный срок окупаемости)', header_font)
+    ws.write(4, 4, dpp, header_font)
+
+    # npv table
+    ws.write(6, 0, 'NPV (чистая приведенная стоимость)', header_font)
     columns = ['Год', 'Доходы проекта', 'Первоначальные инвестиции/Расходы проекта',
                'Чистый поток платежей', 'Коэффициент дисконтирования', 'Дисконтированные платежи']
 
     for col_num in range(len(columns)):
-        ws.write(4, col_num, columns[col_num], font_style)
-
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
+        ws.write(7, col_num, columns[col_num], header_font)
 
     for row_num in range(len(incomes)):
-        ws.write(row_num + 5, 0, row_num, font_style)
-        ws.write(row_num + 5, 1, incomes[row_num], font_style)
-        ws.write(row_num + 5, 2, outgos[row_num], font_style)
-        ws.write(row_num + 5, 3, incomes[row_num] - outgos[row_num], font_style)
-        ws.write(row_num + 5, 4, ctx.get('coefs')[row_num], font_style)
-        ws.write(row_num + 5, 5, ctx.get('discounteds')[row_num], font_style)
+        ws.write(row_num + 8, 0, row_num, body_font)
+        ws.write(row_num + 8, 1, incomes[row_num], body_font)
+        ws.write(row_num + 8, 2, outgos[row_num], body_font)
+        ws.write(row_num + 8, 3, incomes[row_num] - outgos[row_num], body_font)
+        ws.write(row_num + 8, 4, ctx.get('coefs')[row_num], body_font)
+        ws.write(row_num + 8, 5, ctx.get('discounteds')[row_num], body_font)
 
-    row_num = len(incomes) + 5
-    ws.write(row_num, 0, 'Итого', font_style)
-    ws.write(row_num, 1, ctx.get('totalIncome'), font_style)
-    ws.write(row_num, 2, ctx.get('totalOutgo'), font_style)
-    ws.write(row_num, 3, ctx.get('totalRes'), font_style)
+    row_num = len(incomes) + 8
+    ws.write(row_num, 0, 'Итого', body_font)
+    ws.write(row_num, 1, ctx.get('totalIncome'), body_font)
+    ws.write(row_num, 2, ctx.get('totalOutgo'), body_font)
+    ws.write(row_num, 3, ctx.get('totalRes'), body_font)
+
+    # pp table
+    ws.write(row_num + 2, 0, 'DPP (дисконтированный срок окупаемости)', header_font)
+    row_num += 3
+    ws.write(row_num, 0, 'Год', header_font)
+    ws.write(row_num, 1, 'Первоначальные затраты', header_font)
+    ws.write(row_num, 2, 'Денежный поток нарастающим итогом', header_font)
+
+    total_res = 0
+    total_outgo = 0
+    for i in range(len(incomes)):
+        total_res += incomes[i] - outgos[i]
+        total_outgo += outgos[i]
+        ws.write(row_num + i + 1, 0, i, body_font)
+        ws.write(row_num + i + 1, 1, total_outgo, body_font)
+        ws.write(row_num + i + 1, 2, total_res, body_font)
+
+    # dpp table
+    row_num += len(incomes) + 3
+    ws.write(row_num - 1, 0, 'DPP (дисконтированный срок окупаемости)', header_font)
+    ws.write(row_num, 0, 'Год', header_font)
+    ws.write(row_num, 1, 'Первоначальные затраты', header_font)
+    ws.write(row_num, 2, 'Дисконтированный поток нарастающим потоком', header_font)
+
+    total_outgo = 0
+    total_discounted = 0
+    for i in range(len(incomes)):
+        total_outgo += outgos[i]
+        total_discounted += ctx.get('discounteds')[i]
+
+        ws.write(row_num + i + 1, 0, i, body_font)
+        ws.write(row_num + i + 1, 1, total_outgo, body_font)
+        ws.write(row_num + i + 1, 2, total_discounted, body_font)
 
     wb.save(response)
     return response
